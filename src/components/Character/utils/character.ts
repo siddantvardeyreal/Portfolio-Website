@@ -18,7 +18,7 @@ const setCharacter = (
       try {
         const encryptedBlob = await decryptFile(
           "/models/character.enc",
-          "Character3D#@"
+          import.meta.env.VITE_MODEL_KEY ?? "Character3D#@"
         );
         const blobUrl = URL.createObjectURL(new Blob([encryptedBlob]));
 

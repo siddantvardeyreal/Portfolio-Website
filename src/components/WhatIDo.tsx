@@ -87,24 +87,24 @@ const WhatIDo = () => {
             <div className="what-corner"></div>
 
             <div className="what-content-in">
-              <h3>DEVELOP</h3>
-              <h4>Description</h4>
+              <h3>FRONTEND</h3>
+              <h4>Development</h4>
               <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas
-                quia aliquid laboriosam ducimus sit molestiae.
+                Building high-performance, interactive web applications with a
+                focus on 3D experiences, smooth animations, and scalable
+                architecture.
               </p>
               <h5>Skillset & tools</h5>
               <div className="what-content-flex">
                 <div className="what-tags">JavaScript</div>
                 <div className="what-tags">TypeScript</div>
-                <div className="what-tags">Three.js</div>
                 <div className="what-tags">React</div>
-                <div className="what-tags">Css</div>
-                <div className="what-tags">Node.js</div>
+                <div className="what-tags">Three.js</div>
                 <div className="what-tags">Next.js</div>
-                <div className="what-tags">Express.js</div>
-                <div className="what-tags">PHP</div>
-                <div className="what-tags">MySql</div>
+                <div className="what-tags">Node.js</div>
+                <div className="what-tags">CSS</div>
+                <div className="what-tags">GSAP</div>
+                <div className="what-tags">REST APIs</div>
               </div>
               <div className="what-arrow"></div>
             </div>
@@ -128,22 +128,24 @@ const WhatIDo = () => {
             </div>
             <div className="what-corner"></div>
             <div className="what-content-in">
-              <h3>DESIGN</h3>
-              <h4>Description</h4>
+              <h3>GEN AI</h3>
+              <h4>Engineering</h4>
               <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas
-                quia aliquid laboriosam ducimus sit molestiae
+                Designing LLM-powered systems, agentic workflows, and evaluation
+                pipelines with hands-on experience in RLHF, RAG, and prompt
+                engineering.
               </p>
               <h5>Skillset & tools</h5>
               <div className="what-content-flex">
-                <div className="what-tags">Blender</div>
-                <div className="what-tags">Zbrush</div>
-                <div className="what-tags">UI Design</div>
-                <div className="what-tags">Motion</div>
-                <div className="what-tags">Rigging</div>
-                <div className="what-tags">3D Animation</div>
-                <div className="what-tags">Character Design</div>
-                <div className="what-tags">Modelling</div>
+                <div className="what-tags">RAG Pipelines</div>
+                <div className="what-tags">RLHF</div>
+                <div className="what-tags">Prompt Engineering</div>
+                <div className="what-tags">LangChain</div>
+                <div className="what-tags">FAISS / Pinecone</div>
+                <div className="what-tags">HuggingFace</div>
+                <div className="what-tags">Python</div>
+                <div className="what-tags">LLM APIs</div>
+                <div className="what-tags">Agentic Workflows</div>
               </div>
               <div className="what-arrow"></div>
             </div>

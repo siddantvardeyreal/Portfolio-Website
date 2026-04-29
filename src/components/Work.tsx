@@ -6,6 +6,51 @@ import { useGSAP } from "@gsap/react";
 
 gsap.registerPlugin(useGSAP);
 
+const projects = [
+  {
+    title: "LLM Evaluation & RLHF Pipeline",
+    category: "Generative AI",
+    tools: "Python, RLHF, Prompt Engineering, Evaluation Frameworks",
+    image: "/images/project-rlhf.jpg",
+  },
+  {
+    title: "Agentic AI Automation System",
+    category: "Generative AI",
+    tools: "LLM APIs, Agentic Workflows, Prompt Engineering, API Integration",
+    image: "/images/project-agentic.jpg",
+  },
+  {
+    title: "RAG-Based Document QA System",
+    category: "Generative AI",
+    tools: "Python, LangChain, FAISS/Pinecone, OpenAI/HF, Embeddings",
+    image: "/images/project-rag.jpg",
+  },
+  {
+    title: "AI Workflow Optimization System",
+    category: "Generative AI",
+    tools: "Python, Data Pipelines, CI/CD, AI Tooling",
+    image: "/images/project-workflow.jpg",
+  },
+  {
+    title: "Darzivo",
+    category: "Mobile App / Fashion Tech",
+    tools: "React Native, MediaPipe, Python, FastAPI, Supabase, Railway, TypeScript",
+    image: "/images/project-darzivo.jpg",
+  },
+  {
+    title: "AI Dev Radar",
+    category: "Mobile App / AI News",
+    tools: "React Native, LLM APIs, Source Citation, TypeScript",
+    image: "/images/project-ai-radar.jpg",
+  },
+  {
+    title: "RAG Smart Loan Advisor",
+    category: "Generative AI / FinTech",
+    tools: "Python, RAG, LangChain, FAISS/Pinecone, FastAPI, LLM APIs",
+    image: "/images/project-loan.jpg",
+  },
+];
+
 const Work = () => {
   useGSAP(() => {
   let translateX: number = 0;
@@ -28,7 +73,7 @@ const Work = () => {
     scrollTrigger: {
       trigger: ".work-section",
       start: "top top",
-      end: `+=${translateX}`, // Use actual scroll width
+      end: `+=${translateX}`,
       scrub: true,
       pin: true,
       id: "work",
@@ -40,7 +85,6 @@ const Work = () => {
     ease: "none",
   });
 
-  // Clean up (optional, good practice)
   return () => {
     timeline.kill();
     ScrollTrigger.getById("work")?.kill();
@@ -53,21 +97,20 @@ const Work = () => {
           My <span>Work</span>
         </h2>
         <div className="work-flex">
-          {[...Array(6)].map((_value, index) => (
+          {projects.map((project, index) => (
             <div className="work-box" key={index}>
               <div className="work-info">
                 <div className="work-title">
-                  <h3>0{index + 1}</h3>
-
+                  <h3>{String(index + 1).padStart(2, "0")}</h3>
                   <div>
-                    <h4>Project Name</h4>
-                    <p>Category</p>
+                    <h4>{project.title}</h4>
+                    <p>{project.category}</p>
                   </div>
                 </div>
                 <h4>Tools and features</h4>
-                <p>Javascript, TypeScript, React, Threejs</p>
+                <p>{project.tools}</p>
               </div>
-              <WorkImage image="/images/placeholder.webp" alt="" />
+              <WorkImage image={project.image} alt={project.title} />
             </div>
           ))}
         </div>
