@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { useRef, useMemo, useState, useEffect, useCallback } from "react";
+import { useRef, useMemo, useState, useEffect } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Environment } from "@react-three/drei";
 import {
@@ -11,88 +11,90 @@ import {
 } from "@react-three/rapier";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-type Category = "genai" | "aiml" | "frameworks" | "backend" | "devops";
-
-const categoryConfig: Record<Category, { label: string; color: string }> = {
-  genai:      { label: "GenAI / LLM",  color: "#8b5cf6" },
-  aiml:       { label: "AI / ML",       color: "#3b82f6" },
-  frameworks: { label: "Frameworks",    color: "#06b6d4" },
-  backend:    { label: "Backend",       color: "#10b981" },
-  devops:     { label: "DevOps",        color: "#f59e0b" },
-};
-
-const skills: { name: string; category: Category }[] = [
-  { name: "RAG",          category: "genai" },
-  { name: "RLHF",         category: "genai" },
-  { name: "LLM APIs",     category: "genai" },
-  { name: "Prompt Eng.",  category: "genai" },
-  { name: "Hugging Face", category: "aiml" },
-  { name: "FAISS",        category: "aiml" },
-  { name: "Pinecone",     category: "aiml" },
-  { name: "LangChain",    category: "frameworks" },
-  { name: "REST APIs",    category: "frameworks" },
-  { name: "Python",       category: "backend" },
-  { name: "Node.js",      category: "backend" },
-  { name: "TypeScript",   category: "backend" },
-  { name: "AWS",          category: "backend" },
-  { name: "Docker",       category: "devops" },
-  { name: "CI/CD",        category: "devops" },
-  { name: "Git",          category: "devops" },
+const skills = [
+  "Python",
+  "Node.js",
+  "TypeScript",
+  "LangChain",
+  "LLM APIs",
+  "RAG",
+  "RLHF",
+  "Prompt Eng.",
+  "Hugging Face",
+  "Docker",
+  "AWS",
+  "FAISS",
+  "Pinecone",
+  "REST APIs",
+  "CI/CD",
+  "Git",
 ];
 
-const sphereGeometry = new THREE.SphereGeometry(1, 24, 24);
+function createSkillTexture(skill: string): THREE.CanvasTexture {
+  const size = 256;
+  const canvas = document.createElement("canvas");
+  canvas.width = size;
+  canvas.height = size;
+  const ctx = canvas.getContext("2d")!;
 
-const sphereData = skills.map((skill, i) => ({
-  scale: ([0.7, 1, 0.8, 1, 1] as const)[i % 5],
-  color: categoryConfig[skill.category].color,
-  name: skill.name,
+  ctx.beginPath();
+  ctx.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2);
+  ctx.fillStyle = "#0e0c1a";
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.arc(size / 2, size / 2, size / 2 - 5, 0, Math.PI * 2);
+  ctx.strokeStyle = "#7c6aff";
+  ctx.lineWidth = 6;
+  ctx.stroke();
+
+  ctx.fillStyle = "#ffffff";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+
+  const words = skill.split(" ");
+  const len = skill.replace(" ", "").length;
+  const fontSize = len <= 3 ? 58 : len <= 6 ? 46 : len <= 9 ? 34 : len <= 12 ? 26 : 21;
+  ctx.font = `700 ${fontSize}px Arial, sans-serif`;
+
+  if (words.length === 1) {
+    ctx.fillText(skill, size / 2, size / 2);
+  } else {
+    const lineH = fontSize * 1.25;
+    const half = Math.ceil(words.length / 2);
+    ctx.fillText(words.slice(0, half).join(" "), size / 2, size / 2 - lineH / 2);
+    ctx.fillText(words.slice(half).join(" "), size / 2, size / 2 + lineH / 2);
+  }
+
+  return new THREE.CanvasTexture(canvas);
+}
+
+const textures = skills.map(createSkillTexture);
+
+const sphereGeometry = new THREE.SphereGeometry(1, 24, 24);
+const spheres = skills.map((_, i) => ({
+  scale: [0.7, 1, 0.8, 1, 1][Math.floor(Math.random() * 5)],
+  materialIndex: i,
 }));
 
 type SphereProps = {
   vec?: THREE.Vector3;
   scale: number;
   r?: typeof THREE.MathUtils.randFloatSpread;
-  color: string;
+  material: THREE.MeshPhysicalMaterial;
   isActive: boolean;
-  isHovered: boolean;
-  onPointerOver: (e: any) => void;
-  onPointerMove: (e: any) => void;
-  onPointerOut: () => void;
 };
 
 function SphereGeo({
   vec = new THREE.Vector3(),
   scale,
   r = THREE.MathUtils.randFloatSpread,
-  color,
+  material,
   isActive,
-  isHovered,
-  onPointerOver,
-  onPointerMove,
-  onPointerOut,
 }: SphereProps) {
   const api = useRef<RapierRigidBody | null>(null);
 
-  const material = useMemo(
-    () =>
-      new THREE.MeshPhysicalMaterial({
-        color,
-        emissive: color,
-        emissiveIntensity: 0.12,
-        metalness: 0.3,
-        roughness: 0.4,
-        clearcoat: 0.6,
-      }),
-    [color]
-  );
-
   useFrame((_state, delta) => {
-    material.emissiveIntensity = THREE.MathUtils.lerp(
-      material.emissiveIntensity,
-      isHovered ? 0.85 : 0.12,
-      0.12
-    );
-
     if (!isActive) return;
     delta = Math.min(0.1, delta);
     const impulse = vec
@@ -105,6 +107,7 @@ function SphereGeo({
           -50 * delta * scale
         )
       );
+
     api.current?.applyImpulse(impulse, true);
   });
 
@@ -129,9 +132,7 @@ function SphereGeo({
         scale={scale}
         geometry={sphereGeometry}
         material={material}
-        onPointerOver={(e) => { e.stopPropagation(); onPointerOver(e); }}
-        onPointerMove={(e) => { e.stopPropagation(); onPointerMove(e); }}
-        onPointerOut={onPointerOut}
+        rotation={[0.3, 1, 1]}
       />
     </RigidBody>
   );
@@ -170,29 +171,8 @@ function Pointer({ vec = new THREE.Vector3(), isActive }: PointerProps) {
   );
 }
 
-type Tooltip = { x: number; y: number; name: string; color: string };
-
 const TechStack = () => {
   const [isActive, setIsActive] = useState(false);
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-  const [tooltip, setTooltip] = useState<Tooltip | null>(null);
-
-  const handlePointerOver = useCallback(
-    (index: number, name: string, color: string, e: any) => {
-      setHoveredIndex(index);
-      setTooltip({ x: e.clientX, y: e.clientY, name, color });
-    },
-    []
-  );
-
-  const handlePointerMove = useCallback((e: any) => {
-    setTooltip((prev) => (prev ? { ...prev, x: e.clientX, y: e.clientY } : null));
-  }, []);
-
-  const handlePointerOut = useCallback(() => {
-    setHoveredIndex(null);
-    setTooltip(null);
-  }, []);
 
   useEffect(() => {
     let translateX = 0;
@@ -202,6 +182,7 @@ const TechStack = () => {
       const workFlex = workEl.querySelector(".work-flex") as HTMLElement | null;
       const lastBox = workEl.querySelector(".work-box:last-child") as HTMLElement | null;
       if (!workFlex || !lastBox) { translateX = 0; return; }
+      // Use last box position to avoid ::before/::after pseudo-elements inflating scrollWidth
       const paddingRight = parseFloat(getComputedStyle(workFlex).paddingRight) || 0;
       translateX = Math.max(
         0,
@@ -211,21 +192,31 @@ const TechStack = () => {
 
     const handleScroll = () => {
       const workEl = document.getElementById("work");
-      if (!workEl) { setIsActive(false); return; }
+      if (!workEl) {
+        setIsActive(false);
+        return;
+      }
       const scrollY = window.scrollY || document.documentElement.scrollTop;
-      setIsActive(scrollY > workEl.offsetTop + translateX);
+      const threshold = workEl.offsetTop + translateX;
+      setIsActive(scrollY > threshold);
     };
 
+    // Initialize
     updateTranslateX();
     handleScroll();
 
+    // Listen for resize to update translateX
     window.addEventListener("resize", updateTranslateX, { passive: true });
     window.addEventListener("scroll", handleScroll, { passive: true });
 
+    // Also listen for clicks on header links to update after smooth scroll
     document.querySelectorAll(".header a").forEach((elem) => {
       const element = elem as HTMLAnchorElement;
       element.addEventListener("click", () => {
-        const interval = setInterval(() => { updateTranslateX(); handleScroll(); }, 10);
+        const interval = setInterval(() => {
+          updateTranslateX();
+          handleScroll();
+        }, 10);
         setTimeout(() => clearInterval(interval), 500);
       });
     });
@@ -241,122 +232,67 @@ const TechStack = () => {
     };
   }, []);
 
+  const materials = useMemo(() => {
+    return textures.map(
+      (texture) =>
+        new THREE.MeshPhysicalMaterial({
+          map: texture,
+          emissive: "#7c6aff",
+          emissiveIntensity: 0.15,
+          metalness: 0.2,
+          roughness: 0.7,
+          clearcoat: 0.4,
+        })
+    );
+  }, []);
+
   return (
     <div className="techstack">
-      <h2>My Techstack</h2>
+      <h2> My Techstack</h2>
 
-      <div style={{ position: "relative" }}>
-        <Canvas
-          shadows={false}
-          gl={{
-            alpha: true,
-            stencil: false,
-            depth: false,
-            antialias: false,
-            powerPreference: "high-performance",
-          }}
-          camera={{ position: [0, 0, 20], fov: 32.5, near: 1, far: 100 }}
-          onCreated={(state) => {
-            state.gl.toneMappingExposure = 1.5;
-            state.gl.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-          }}
-          className="tech-canvas"
-        >
-          <ambientLight intensity={1} />
-          <spotLight
-            position={[20, 20, 25]}
-            penumbra={1}
-            angle={0.2}
-            color="white"
-            castShadow={false}
-          />
-          <directionalLight position={[0, 5, -4]} intensity={2} />
-          <Physics gravity={[0, 0, 0]}>
-            <Pointer isActive={isActive} />
-            {sphereData.map((props, i) => (
-              <SphereGeo
-                key={i}
-                scale={props.scale}
-                color={props.color}
-                isActive={isActive}
-                isHovered={hoveredIndex === i}
-                onPointerOver={(e) => handlePointerOver(i, props.name, props.color, e)}
-                onPointerMove={handlePointerMove}
-                onPointerOut={handlePointerOut}
-              />
-            ))}
-          </Physics>
-          <Environment
-            files="/models/char_enviorment.hdr"
-            environmentIntensity={0.5}
-            environmentRotation={[0, 4, 2]}
-          />
-        </Canvas>
-
-        {tooltip && (
-          <div
-            style={{
-              position: "fixed",
-              left: tooltip.x + 14,
-              top: tooltip.y - 36,
-              background: "rgba(10, 8, 20, 0.92)",
-              color: tooltip.color,
-              border: `1px solid ${tooltip.color}`,
-              borderRadius: "6px",
-              padding: "5px 12px",
-              fontSize: "13px",
-              fontWeight: 600,
-              letterSpacing: "0.5px",
-              pointerEvents: "none",
-              zIndex: 1000,
-              backdropFilter: "blur(8px)",
-              whiteSpace: "nowrap",
-              boxShadow: `0 0 12px ${tooltip.color}40`,
-            }}
-          >
-            {tooltip.name}
-          </div>
-        )}
-      </div>
-
-      <div
-        style={{
-          display: "flex",
-          gap: "20px",
-          flexWrap: "wrap",
-          justifyContent: "center",
-          marginTop: "16px",
-          padding: "0 20px",
+      <Canvas
+        shadows={false} // shadows disabled — not visible at this scale, saves GPU
+        gl={{
+          alpha: true,
+          stencil: false,
+          depth: false,
+          antialias: false,
+          powerPreference: "high-performance",
         }}
+        camera={{ position: [0, 0, 20], fov: 32.5, near: 1, far: 100 }}
+        onCreated={(state) => {
+          state.gl.toneMappingExposure = 1.5;
+          state.gl.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        }}
+        className="tech-canvas"
       >
-        {Object.values(categoryConfig).map(({ label, color }) => (
-          <div
-            key={label}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "7px",
-              fontSize: "13px",
-              color: "#aaa",
-              fontWeight: 300,
-              letterSpacing: "0.3px",
-            }}
-          >
-            <span
-              style={{
-                width: "10px",
-                height: "10px",
-                borderRadius: "50%",
-                background: color,
-                display: "inline-block",
-                flexShrink: 0,
-                boxShadow: `0 0 6px ${color}`,
-              }}
+        <ambientLight intensity={1} />
+        <spotLight
+          position={[20, 20, 25]}
+          penumbra={1}
+          angle={0.2}
+          color="white"
+          castShadow={false}
+        />
+        <directionalLight position={[0, 5, -4]} intensity={2} />
+        <Physics gravity={[0, 0, 0]}>
+          <Pointer isActive={isActive} />
+          {spheres.map((props, i) => (
+            <SphereGeo
+              key={i}
+              scale={props.scale}
+              material={materials[props.materialIndex]}
+              isActive={isActive}
             />
-            {label}
-          </div>
-        ))}
-      </div>
+          ))}
+        </Physics>
+        <Environment
+          files="/models/char_enviorment.hdr"
+          environmentIntensity={0.5}
+          environmentRotation={[0, 4, 2]}
+        />
+        {/* N8AO removed — ambient occlusion on 20 bouncing spheres is the #1 GPU bottleneck */}
+      </Canvas>
     </div>
   );
 };
