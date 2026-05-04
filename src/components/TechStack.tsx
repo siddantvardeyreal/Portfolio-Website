@@ -12,25 +12,25 @@ import {
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const skills = [
-  "Python",
-  "Node.js",
-  "TypeScript",
-  "LangChain",
-  "LLM APIs",
-  "RAG",
-  "RLHF",
-  "Prompt Eng.",
-  "Hugging Face",
-  "Docker",
-  "AWS",
-  "FAISS",
-  "Pinecone",
-  "REST APIs",
-  "CI/CD",
-  "Git",
+  { name: "Python",       color: "#8b5cf6" },
+  { name: "Node.js",      color: "#10b981" },
+  { name: "TypeScript",   color: "#3b82f6" },
+  { name: "LangChain",    color: "#f59e0b" },
+  { name: "LLM APIs",     color: "#ec4899" },
+  { name: "RAG",          color: "#06b6d4" },
+  { name: "RLHF",         color: "#a855f7" },
+  { name: "Prompt Eng.",  color: "#f97316" },
+  { name: "Hugging Face", color: "#facc15" },
+  { name: "Docker",       color: "#38bdf8" },
+  { name: "AWS",          color: "#fb923c" },
+  { name: "FAISS",        color: "#4ade80" },
+  { name: "Pinecone",     color: "#e879f9" },
+  { name: "REST APIs",    color: "#34d399" },
+  { name: "CI/CD",        color: "#60a5fa" },
+  { name: "Git",          color: "#f87171" },
 ];
 
-function createSkillTexture(skill: string): THREE.CanvasTexture {
+function createSkillTexture(name: string, color: string): THREE.CanvasTexture {
   const size = 256;
   const canvas = document.createElement("canvas");
   canvas.width = size;
@@ -44,7 +44,7 @@ function createSkillTexture(skill: string): THREE.CanvasTexture {
 
   ctx.beginPath();
   ctx.arc(size / 2, size / 2, size / 2 - 5, 0, Math.PI * 2);
-  ctx.strokeStyle = "#7c6aff";
+  ctx.strokeStyle = color;
   ctx.lineWidth = 6;
   ctx.stroke();
 
@@ -52,13 +52,13 @@ function createSkillTexture(skill: string): THREE.CanvasTexture {
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
 
-  const words = skill.split(" ");
-  const len = skill.replace(" ", "").length;
-  const fontSize = len <= 3 ? 58 : len <= 6 ? 46 : len <= 9 ? 34 : len <= 12 ? 26 : 21;
+  const words = name.split(" ");
+  const len = name.replace(/ /g, "").length;
+  const fontSize = len <= 3 ? 46 : len <= 6 ? 36 : len <= 9 ? 28 : len <= 12 ? 22 : 17;
   ctx.font = `700 ${fontSize}px Arial, sans-serif`;
 
   if (words.length === 1) {
-    ctx.fillText(skill, size / 2, size / 2);
+    ctx.fillText(name, size / 2, size / 2);
   } else {
     const lineH = fontSize * 1.25;
     const half = Math.ceil(words.length / 2);
@@ -69,7 +69,7 @@ function createSkillTexture(skill: string): THREE.CanvasTexture {
   return new THREE.CanvasTexture(canvas);
 }
 
-const textures = skills.map(createSkillTexture);
+const textures = skills.map((s) => createSkillTexture(s.name, s.color));
 
 const sphereGeometry = new THREE.SphereGeometry(1, 24, 24);
 const spheres = skills.map((_, i) => ({
@@ -234,10 +234,10 @@ const TechStack = () => {
 
   const materials = useMemo(() => {
     return textures.map(
-      (texture) =>
+      (texture, i) =>
         new THREE.MeshPhysicalMaterial({
           map: texture,
-          emissive: "#7c6aff",
+          emissive: skills[i].color,
           emissiveIntensity: 0.15,
           metalness: 0.2,
           roughness: 0.7,
