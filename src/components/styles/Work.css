@@ -210,11 +210,57 @@
     gap: 20px;
   }
 } */
-@media only screen and (max-width: 1025px) {
+@media only screen and (max-width: 1024px) {
+  .work-section {
+    height: auto;
+    overflow: hidden;
+  }
   .work-container {
     align-content: normal;
+    height: auto;
   }
   .work-flex {
-    height: auto;
+    height: 72vh;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    /* reset desktop-only offsets */
+    margin-left: 0;
+    padding-right: 0;
+    padding-left: 20px;
+    gap: 0;
+  }
+  .work-flex::-webkit-scrollbar {
+    display: none;
+  }
+  /* hide the 50000vw decorative lines — they don't make sense in a scroll container */
+  .work-flex::before,
+  .work-flex::after {
+    display: none;
+  }
+  .work-box {
+    width: 85vw;
+    flex-shrink: 0;
+    scroll-snap-align: start;
+    border-right: 1px solid #363636;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .work-box {
+    width: 92vw;
+    padding: 24px;
+    gap: 30px;
+  }
+  .work-section h2 {
+    font-size: 42px;
+    margin-top: 60px;
+    margin-bottom: 10px;
+  }
+  .work-flex {
+    height: 78vh;
+    padding-left: 16px;
   }
 }
