@@ -32,6 +32,21 @@ const Career = () => {
             <div className="career-info-in">
               <div className="career-role">
                 <h4>Software Developer Engineer - II</h4>
+                <h5>Kreditbee</h5>
+              </div>
+              <h3>2022</h3>
+            </div>
+            <p>
+              Resolved 50+ web and mobile issues, improving operational
+              efficiency by 20% and reducing customer support tickets by 15%.
+              Boosted blog engagement by 25% through CMS enhancements.
+            </p>
+          </div>
+
+          <div className="career-info-box">
+            <div className="career-info-in">
+              <div className="career-role">
+                <h4>Software Developer Engineer - II</h4>
                 <h5>Spacejoy</h5>
               </div>
               <h3>2023</h3>
@@ -41,21 +56,6 @@ const Career = () => {
               Three.js, increasing user engagement by 25%. Optimized web
               performance, reducing page load time by 40% and improving Core Web
               Vitals by 15%.
-            </p>
-          </div>
-
-          <div className="career-info-box">
-            <div className="career-info-in">
-              <div className="career-role">
-                <h4>Software Developer Engineer - II</h4>
-                <h5>Kreditbee</h5>
-              </div>
-              <h3>2022</h3>
-            </div>
-            <p>
-              Resolved 50+ web and mobile issues, improving operational
-              efficiency by 20% and reducing customer support tickets by 15%.
-              Boosted blog engagement by 25% through CMS enhancements.
             </p>
           </div>
 

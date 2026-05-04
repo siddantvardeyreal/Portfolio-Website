@@ -34,7 +34,7 @@
 }
 .what-box-in {
   flex-direction: column;
-  height: 500px;
+  height: 580px;
   margin-left: 200px;
   position: relative;
   display: none;
@@ -208,6 +208,10 @@
   height: 100%;
   overflow: hidden;
 }
+.what-noTouch:hover .what-content-in,
+.what-content-active .what-content-in {
+  overflow: visible;
+}
 .what-content-in h5 {
   font-weight: 300;
   opacity: 0.5;
@@ -249,7 +253,7 @@
     margin-right: 20%;
   }
   .what-box-in {
-    height: 400px;
+    height: 480px;
   }
   .what-content h3 {
     font-size: 28px;

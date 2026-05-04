@@ -56,32 +56,32 @@ const Work = () => {
   let translateX: number = 0;
 
   function setTranslateX() {
-    const box = document.getElementsByClassName("work-box");
-    const rectLeft = document
-      .querySelector(".work-container")!
-      .getBoundingClientRect().left;
-    const rect = box[0].getBoundingClientRect();
-    const parentWidth = box[0].parentElement!.getBoundingClientRect().width;
-    let padding: number =
-      parseInt(window.getComputedStyle(box[0]).padding) / 2;
-    translateX = rect.width * box.length - (rectLeft + parentWidth) + padding;
+    const workFlex = document.querySelector(".work-flex") as HTMLElement;
+    if (workFlex) {
+      // offsetLeft is layout-based and unaffected by GSAP x-transforms,
+      // so this stays accurate even when called mid-animation during refresh.
+      translateX = Math.max(0, workFlex.offsetLeft + workFlex.scrollWidth - window.innerWidth);
+    }
   }
 
   setTranslateX();
 
-  let timeline = gsap.timeline({
+  const timeline = gsap.timeline({
     scrollTrigger: {
       trigger: ".work-section",
       start: "top top",
-      end: `+=${translateX}`,
+      end: () => `+=${translateX}`,
       scrub: true,
       pin: true,
+      anticipatePin: 1,
+      invalidateOnRefresh: true,
       id: "work",
+      onRefreshInit: setTranslateX,
     },
   });
 
   timeline.to(".work-flex", {
-    x: -translateX,
+    x: () => -translateX,
     ease: "none",
   });
 

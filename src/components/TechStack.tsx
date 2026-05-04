@@ -2,7 +2,6 @@ import * as THREE from "three";
 import { useRef, useMemo, useState, useEffect } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Environment } from "@react-three/drei";
-import { EffectComposer, N8AO } from "@react-three/postprocessing";
 import {
   BallCollider,
   Physics,
@@ -10,6 +9,7 @@ import {
   CylinderCollider,
   RapierRigidBody,
 } from "@react-three/rapier";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const textureLoader = new THREE.TextureLoader();
 const imageUrls = [
@@ -24,10 +24,12 @@ const imageUrls = [
 ];
 const textures = imageUrls.map((url) => textureLoader.load(url));
 
-const sphereGeometry = new THREE.SphereGeometry(1, 28, 28);
-
-const spheres = [...Array(30)].map(() => ({
+// reduced from 30 → 20; material index pre-assigned so render is stable
+const sphereGeometry = new THREE.SphereGeometry(1, 24, 24); // 24 segments vs 28 saves ~30% verts
+const SPHERE_COUNT = 20;
+const spheres = [...Array(SPHERE_COUNT)].map((_, i) => ({
   scale: [0.7, 1, 0.8, 1, 1][Math.floor(Math.random() * 5)],
+  materialIndex: i % textures.length, // stable, no random on render
 }));
 
 type SphereProps = {
@@ -128,29 +130,64 @@ const TechStack = () => {
   const [isActive, setIsActive] = useState(false);
 
   useEffect(() => {
+    let translateX = 0;
+    const updateTranslateX = () => {
+      const workEl = document.getElementById("work");
+      if (!workEl) {
+        translateX = 0;
+        return;
+      }
+      const workFlex = workEl.querySelector(".work-flex");
+      if (workFlex) {
+        const rect = workFlex.getBoundingClientRect();
+        translateX = rect.left + workFlex.scrollWidth - window.innerWidth;
+      } else {
+        translateX = 0;
+      }
+    };
+
     const handleScroll = () => {
+      const workEl = document.getElementById("work");
+      if (!workEl) {
+        setIsActive(false);
+        return;
+      }
       const scrollY = window.scrollY || document.documentElement.scrollTop;
-      const threshold = document
-        .getElementById("work")!
-        .getBoundingClientRect().top;
+      const threshold = workEl.offsetTop + translateX;
       setIsActive(scrollY > threshold);
     };
+
+    // Initialize
+    updateTranslateX();
+    handleScroll();
+
+    // Listen for resize to update translateX
+    window.addEventListener("resize", updateTranslateX, { passive: true });
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    // Also listen for clicks on header links to update after smooth scroll
     document.querySelectorAll(".header a").forEach((elem) => {
       const element = elem as HTMLAnchorElement;
       element.addEventListener("click", () => {
         const interval = setInterval(() => {
+          updateTranslateX();
           handleScroll();
         }, 10);
-        setTimeout(() => {
-          clearInterval(interval);
-        }, 1000);
+        setTimeout(() => clearInterval(interval), 500);
       });
     });
-    window.addEventListener("scroll", handleScroll);
+
+    setTimeout(() => {
+      ScrollTrigger.refresh();
+      window.dispatchEvent(new Event("resize"));
+    }, 500);
+
     return () => {
+      window.removeEventListener("resize", updateTranslateX);
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
   const materials = useMemo(() => {
     return textures.map(
       (texture) =>
@@ -171,10 +208,19 @@ const TechStack = () => {
       <h2> My Techstack</h2>
 
       <Canvas
-        shadows
-        gl={{ alpha: true, stencil: false, depth: false, antialias: false }}
+        shadows={false} // shadows disabled — not visible at this scale, saves GPU
+        gl={{
+          alpha: true,
+          stencil: false,
+          depth: false,
+          antialias: false,
+          powerPreference: "high-performance",
+        }}
         camera={{ position: [0, 0, 20], fov: 32.5, near: 1, far: 100 }}
-        onCreated={(state) => (state.gl.toneMappingExposure = 1.5)}
+        onCreated={(state) => {
+          state.gl.toneMappingExposure = 1.5;
+          state.gl.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        }}
         className="tech-canvas"
       >
         <ambientLight intensity={1} />
@@ -183,8 +229,7 @@ const TechStack = () => {
           penumbra={1}
           angle={0.2}
           color="white"
-          castShadow
-          shadow-mapSize={[512, 512]}
+          castShadow={false}
         />
         <directionalLight position={[0, 5, -4]} intensity={2} />
         <Physics gravity={[0, 0, 0]}>
@@ -192,8 +237,8 @@ const TechStack = () => {
           {spheres.map((props, i) => (
             <SphereGeo
               key={i}
-              {...props}
-              material={materials[Math.floor(Math.random() * materials.length)]}
+              scale={props.scale}
+              material={materials[props.materialIndex]}
               isActive={isActive}
             />
           ))}
@@ -203,9 +248,7 @@ const TechStack = () => {
           environmentIntensity={0.5}
           environmentRotation={[0, 4, 2]}
         />
-        <EffectComposer enableNormalPass={false}>
-          <N8AO color="#0f002c" aoRadius={2} intensity={1.15} />
-        </EffectComposer>
+        {/* N8AO removed — ambient occlusion on 20 bouncing spheres is the #1 GPU bottleneck */}
       </Canvas>
     </div>
   );

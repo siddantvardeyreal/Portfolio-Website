@@ -23,11 +23,9 @@ const MainContainer = ({ children }: PropsWithChildren) => {
       setIsDesktopView(window.innerWidth > 1024);
     };
     resizeHandler();
-    window.addEventListener("resize", resizeHandler);
-    return () => {
-      window.removeEventListener("resize", resizeHandler);
-    };
-  }, [isDesktopView]);
+    window.addEventListener("resize", resizeHandler, { passive: true });
+    return () => window.removeEventListener("resize", resizeHandler);
+  }, []); // empty deps — handler is stable, no need to re-register on state change
 
   return (
     <div className="container-main">
@@ -44,7 +42,7 @@ const MainContainer = ({ children }: PropsWithChildren) => {
             <Career />
             <Work />
             {isDesktopView && (
-              <Suspense fallback={<div>Loading....</div>}>
+              <Suspense fallback={<div className="techstack-loading"></div>}>
                 <TechStack />
               </Suspense>
             )}

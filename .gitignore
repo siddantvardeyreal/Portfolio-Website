@@ -27,3 +27,6 @@ dist-ssr
 backup/
 .env
 encrypt.cjs
+
+# Raw/uncompressed source assets
+my_character_original.glb

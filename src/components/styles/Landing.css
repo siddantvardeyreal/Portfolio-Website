@@ -215,6 +215,10 @@
 .landing-h2-info-1 {
   position: absolute;
   top: 0;
+  animation: roleSecond 6s ease-in-out infinite;
+}
+.landing-h2-info {
+  animation: roleFirst 6s ease-in-out infinite;
 }
 h2.landing-info-h2 {
   color: #c481ff;
@@ -229,6 +233,20 @@ h2.landing-info-h2 {
 .landing-h2-2 {
   position: absolute;
   top: 0;
+  animation: roleSecond 6s ease-in-out infinite;
+}
+.landing-h2-1 {
+  animation: roleFirst 6s ease-in-out infinite;
+}
+@keyframes roleFirst {
+  0%, 38% { opacity: 1; }
+  48%, 90% { opacity: 0; }
+  100%     { opacity: 1; }
+}
+@keyframes roleSecond {
+  0%, 38% { opacity: 0; }
+  48%, 90% { opacity: 1; }
+  100%     { opacity: 0; }
 }
 .landing-info-h2::after {
   content: "";

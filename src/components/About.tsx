@@ -7,12 +7,13 @@ const About = () => {
         <h3 className="title">About Me</h3>
         <p className="para">
           Software Engineer with 5+ years of experience building scalable
-          applications and LLM-powered systems, with a focus on Generative AI,
-          agent-based workflows, and evaluation pipelines. Hands-on experience
-          in RLHF, prompt engineering, and AI automation, with growing expertise
-          in RAG pipelines, semantic search, and Python-based ML systems. Strong
-          background in backend development, system design, and CI/CD, with the
-          ability to rapidly prototype and productionize AI solutions.
+          web apps and LLM-powered systems — focused on Generative AI,
+          agentic workflows, and evaluation pipelines.
+        </p>
+        <p className="para">
+          Hands-on with RLHF, RAG, prompt engineering, and Python-based ML.
+          Strong background in frontend, system design, and CI/CD, with the
+          ability to rapidly prototype and ship AI solutions.
         </p>
       </div>
     </div>

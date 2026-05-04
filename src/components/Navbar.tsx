@@ -13,9 +13,9 @@ const Navbar = () => {
     smoother = ScrollSmoother.create({
       wrapper: "#smooth-wrapper",
       content: "#smooth-content",
-      smooth: 1.7,
-      speed: 1.7,
-      effects: true,
+      smooth: 1.2,      // was 1.7 — lower value = less lag feel on slower machines
+      speed: 1.5,       // was 1.7
+      effects: false,   // was true — scans entire DOM on every scroll tick
       autoResize: true,
       ignoreMobileResize: true,
     });
