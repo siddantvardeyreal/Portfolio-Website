@@ -10,42 +10,49 @@ const projects = [
   {
     title: "LLM Evaluation & RLHF Pipeline",
     category: "Generative AI",
+    description: "Built a pipeline to evaluate LLM outputs using custom metrics and human feedback loops. Implements RLHF techniques to iteratively align model responses with quality and safety targets.",
     tools: "Python, RLHF, Prompt Engineering, Evaluation Frameworks",
     image: "/images/project-rlhf.jpg",
   },
   {
     title: "Agentic AI Automation System",
     category: "Generative AI",
+    description: "Developed an autonomous agent that orchestrates multi-step LLM calls, tool use, and decision branching to automate complex workflows end-to-end with minimal human intervention.",
     tools: "LLM APIs, Agentic Workflows, Prompt Engineering, API Integration",
     image: "/images/project-agentic.jpg",
   },
   {
     title: "RAG-Based Document QA System",
     category: "Generative AI",
+    description: "Ingests and indexes documents into a vector store, then answers natural language queries with grounded, cited responses using retrieval-augmented generation.",
     tools: "Python, LangChain, FAISS/Pinecone, OpenAI/HF, Embeddings",
     image: "/images/project-rag.jpg",
   },
   {
     title: "AI Workflow Optimization System",
     category: "Generative AI",
+    description: "Engineered data pipelines and CI/CD automation to streamline AI model deployment and monitoring, significantly reducing manual overhead across development and production environments.",
     tools: "Python, Data Pipelines, CI/CD, AI Tooling",
     image: "/images/project-workflow.jpg",
   },
   {
     title: "Darzivo",
     category: "Mobile App / Fashion Tech",
+    description: "A fashion-tech mobile app featuring AI-powered virtual try-on using MediaPipe pose estimation, letting users visualise outfits on themselves in real time before purchasing.",
     tools: "React Native, MediaPipe, Python, FastAPI, Supabase, Railway, TypeScript",
     image: "/images/project-darzivo.jpg",
   },
   {
     title: "AI Dev Radar",
     category: "Mobile App / AI News",
+    description: "A mobile news aggregator that uses LLMs to curate, summarise, and cite the latest AI developments from across the web, keeping developers informed without the noise.",
     tools: "React Native, LLM APIs, Source Citation, TypeScript",
     image: "/images/project-ai-radar.jpg",
   },
   {
     title: "RAG Smart Loan Advisor",
     category: "Generative AI / FinTech",
+    description: "A conversational FinTech advisor that retrieves relevant loan policies and financial documents to answer eligibility and planning questions with accurate, source-backed responses.",
     tools: "Python, RAG, LangChain, FAISS/Pinecone, FastAPI, LLM APIs",
     image: "/images/project-loan.jpg",
   },
@@ -111,6 +118,7 @@ const Work = () => {
                     <p>{project.category}</p>
                   </div>
                 </div>
+                <p className="work-description">{project.description}</p>
                 <h4>Tools and features</h4>
                 <p>{project.tools}</p>
               </div>
