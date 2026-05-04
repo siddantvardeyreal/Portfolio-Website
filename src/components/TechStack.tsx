@@ -133,17 +133,16 @@ const TechStack = () => {
     let translateX = 0;
     const updateTranslateX = () => {
       const workEl = document.getElementById("work");
-      if (!workEl) {
-        translateX = 0;
-        return;
-      }
-      const workFlex = workEl.querySelector(".work-flex");
-      if (workFlex) {
-        const rect = workFlex.getBoundingClientRect();
-        translateX = rect.left + workFlex.scrollWidth - window.innerWidth;
-      } else {
-        translateX = 0;
-      }
+      if (!workEl) { translateX = 0; return; }
+      const workFlex = workEl.querySelector(".work-flex") as HTMLElement | null;
+      const lastBox = workEl.querySelector(".work-box:last-child") as HTMLElement | null;
+      if (!workFlex || !lastBox) { translateX = 0; return; }
+      // Use last box position to avoid ::before/::after pseudo-elements inflating scrollWidth
+      const paddingRight = parseFloat(getComputedStyle(workFlex).paddingRight) || 0;
+      translateX = Math.max(
+        0,
+        workFlex.offsetLeft + lastBox.offsetLeft + lastBox.offsetWidth + paddingRight - window.innerWidth
+      );
     };
 
     const handleScroll = () => {
