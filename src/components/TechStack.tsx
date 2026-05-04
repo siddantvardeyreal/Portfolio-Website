@@ -293,6 +293,22 @@ const TechStack = () => {
         />
         {/* N8AO removed — ambient occlusion on 20 bouncing spheres is the #1 GPU bottleneck */}
       </Canvas>
+
+      <div className="skill-tags">
+        {skills.map((skill) => (
+          <span
+            key={skill.name}
+            className="skill-tag"
+            style={{
+              borderColor: skill.color,
+              color: skill.color,
+              boxShadow: `0 0 8px ${skill.color}30`,
+            }}
+          >
+            {skill.name}
+          </span>
+        ))}
+      </div>
     </div>
   );
 };
