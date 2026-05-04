@@ -11,25 +11,70 @@ import {
 } from "@react-three/rapier";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-const textureLoader = new THREE.TextureLoader();
-const imageUrls = [
-  "/images/react2.webp",
-  "/images/next2.webp",
-  "/images/node2.webp",
-  "/images/express.webp",
-  "/images/mongo.webp",
-  "/images/mysql.webp",
-  "/images/typescript.webp",
-  "/images/javascript.webp",
+const skills = [
+  "Python",
+  "Node.js",
+  "TypeScript",
+  "LangChain",
+  "LLM APIs",
+  "RAG",
+  "RLHF",
+  "Prompt Eng.",
+  "Hugging Face",
+  "Docker",
+  "AWS",
+  "FAISS",
+  "Pinecone",
+  "REST APIs",
+  "CI/CD",
+  "Git",
 ];
-const textures = imageUrls.map((url) => textureLoader.load(url));
 
-// reduced from 30 → 20; material index pre-assigned so render is stable
-const sphereGeometry = new THREE.SphereGeometry(1, 24, 24); // 24 segments vs 28 saves ~30% verts
-const SPHERE_COUNT = 20;
-const spheres = [...Array(SPHERE_COUNT)].map((_, i) => ({
+function createSkillTexture(skill: string): THREE.CanvasTexture {
+  const size = 256;
+  const canvas = document.createElement("canvas");
+  canvas.width = size;
+  canvas.height = size;
+  const ctx = canvas.getContext("2d")!;
+
+  ctx.beginPath();
+  ctx.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2);
+  ctx.fillStyle = "#0e0c1a";
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.arc(size / 2, size / 2, size / 2 - 5, 0, Math.PI * 2);
+  ctx.strokeStyle = "#7c6aff";
+  ctx.lineWidth = 6;
+  ctx.stroke();
+
+  ctx.fillStyle = "#ffffff";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+
+  const words = skill.split(" ");
+  const len = skill.replace(" ", "").length;
+  const fontSize = len <= 3 ? 58 : len <= 6 ? 46 : len <= 9 ? 34 : len <= 12 ? 26 : 21;
+  ctx.font = `700 ${fontSize}px Arial, sans-serif`;
+
+  if (words.length === 1) {
+    ctx.fillText(skill, size / 2, size / 2);
+  } else {
+    const lineH = fontSize * 1.25;
+    const half = Math.ceil(words.length / 2);
+    ctx.fillText(words.slice(0, half).join(" "), size / 2, size / 2 - lineH / 2);
+    ctx.fillText(words.slice(half).join(" "), size / 2, size / 2 + lineH / 2);
+  }
+
+  return new THREE.CanvasTexture(canvas);
+}
+
+const textures = skills.map(createSkillTexture);
+
+const sphereGeometry = new THREE.SphereGeometry(1, 24, 24);
+const spheres = skills.map((_, i) => ({
   scale: [0.7, 1, 0.8, 1, 1][Math.floor(Math.random() * 5)],
-  materialIndex: i % textures.length, // stable, no random on render
+  materialIndex: i,
 }));
 
 type SphereProps = {
@@ -192,12 +237,11 @@ const TechStack = () => {
       (texture) =>
         new THREE.MeshPhysicalMaterial({
           map: texture,
-          emissive: "#ffffff",
-          emissiveMap: texture,
-          emissiveIntensity: 0.3,
-          metalness: 0.5,
-          roughness: 1,
-          clearcoat: 0.1,
+          emissive: "#7c6aff",
+          emissiveIntensity: 0.15,
+          metalness: 0.2,
+          roughness: 0.7,
+          clearcoat: 0.4,
         })
     );
   }, []);
