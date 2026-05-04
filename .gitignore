@@ -30,3 +30,9 @@ encrypt.cjs
 
 # Raw/uncompressed source assets
 my_character_original.glb
+
+# TypeScript build cache
+*.tsbuildinfo
+
+# Local Claude Code tool data
+.claude/
