@@ -57,11 +57,15 @@ const Work = () => {
 
   function setTranslateX() {
     const workFlex = document.querySelector(".work-flex") as HTMLElement;
-    if (workFlex) {
-      // offsetLeft is layout-based and unaffected by GSAP x-transforms,
-      // so this stays accurate even when called mid-animation during refresh.
-      translateX = Math.max(0, workFlex.offsetLeft + workFlex.scrollWidth - window.innerWidth);
-    }
+    const lastBox = document.querySelector(".work-box:last-child") as HTMLElement;
+    if (!workFlex || !lastBox) return;
+    // Use last box position instead of scrollWidth — the ::before/::after pseudo-elements
+    // are 50000vw wide and inflate scrollWidth, causing thousands of extra scroll pixels.
+    const paddingRight = parseFloat(getComputedStyle(workFlex).paddingRight) || 0;
+    translateX = Math.max(
+      0,
+      workFlex.offsetLeft + lastBox.offsetLeft + lastBox.offsetWidth + paddingRight - window.innerWidth
+    );
   }
 
   setTranslateX();
