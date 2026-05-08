@@ -8,6 +8,24 @@ gsap.registerPlugin(useGSAP);
 
 const projects = [
   {
+    title: "AI Dev Radar",
+    category: "Mobile App / AI News",
+    description: "A mobile news aggregator that uses LLMs to curate, summarise, and cite the latest AI developments from across the web, keeping developers informed without the noise.",
+    tools: "React Native, LLM APIs, Source Citation, TypeScript",
+    image: "/images/project-ai-radar.jpg",
+    link: "https://web-nu-liart-21.vercel.app/",
+    mobileBest: true,
+  },
+  {
+    title: "RAG Smart Loan Advisor",
+    category: "Generative AI / FinTech",
+    description: "A conversational FinTech advisor that retrieves relevant loan policies and financial documents to answer eligibility and planning questions with accurate, source-backed responses.",
+    tools: "Python, RAG, LangChain, FAISS/Pinecone, FastAPI, LLM APIs",
+    image: "/images/project-loan.jpg",
+    link: "https://rag-loan-advisor.onrender.com/",
+    mobileBest: true,
+  },
+  {
     title: "LLM Evaluation & RLHF Pipeline",
     category: "Generative AI",
     description: "Built a pipeline to evaluate LLM outputs using custom metrics and human feedback loops. Implements RLHF techniques to iteratively align model responses with quality and safety targets.",
@@ -41,20 +59,6 @@ const projects = [
     description: "A fashion-tech mobile app featuring AI-powered virtual try-on using MediaPipe pose estimation, letting users visualise outfits on themselves in real time before purchasing.",
     tools: "React Native, MediaPipe, Python, FastAPI, Supabase, Railway, TypeScript",
     image: "/images/project-darzivo.jpg",
-  },
-  {
-    title: "AI Dev Radar",
-    category: "Mobile App / AI News",
-    description: "A mobile news aggregator that uses LLMs to curate, summarise, and cite the latest AI developments from across the web, keeping developers informed without the noise.",
-    tools: "React Native, LLM APIs, Source Citation, TypeScript",
-    image: "/images/project-ai-radar.jpg",
-  },
-  {
-    title: "RAG Smart Loan Advisor",
-    category: "Generative AI / FinTech",
-    description: "A conversational FinTech advisor that retrieves relevant loan policies and financial documents to answer eligibility and planning questions with accurate, source-backed responses.",
-    tools: "Python, RAG, LangChain, FAISS/Pinecone, FastAPI, LLM APIs",
-    image: "/images/project-loan.jpg",
   },
 ];
 
@@ -121,11 +125,31 @@ const Work = () => {
                     <p>{project.category}</p>
                   </div>
                 </div>
+                {(project.link || project.mobileBest) && (
+                  <div className="work-badges">
+                    {project.link && (
+                      <a
+                        href={project.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="work-badge work-badge--live"
+                        data-cursor="disable"
+                      >
+                        Live ↗
+                      </a>
+                    )}
+                    {project.mobileBest && (
+                      <span className="work-badge work-badge--mobile">
+                        Best on mobile
+                      </span>
+                    )}
+                  </div>
+                )}
                 <p className="work-description">{project.description}</p>
                 <h4>Tools and features</h4>
                 <p>{project.tools}</p>
               </div>
-              <WorkImage image={project.image} alt={project.title} />
+              <WorkImage image={project.image} alt={project.title} link={project.link} />
             </div>
           ))}
         </div>
