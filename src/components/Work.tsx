@@ -14,6 +14,7 @@ const projects = [
     tools: "FastAPI, LangGraph, LangChain, Ollama, Qdrant, PostgreSQL, Next.js, Docker",
     image: "/images/project-startup-simulator.png",
     link: "https://startup-simulator-tau.vercel.app/",
+    desktopBest: true,
   },
   {
     title: "AI Dev Radar",
@@ -106,7 +107,7 @@ const Work = () => {
                     <p>{project.category}</p>
                   </div>
                 </div>
-                {(project.link || project.mobileBest || project.inProgress) && (
+                {(project.link || project.mobileBest || project.desktopBest || project.inProgress) && (
                   <div className="work-badges">
                     {project.link && (
                       <a
@@ -118,6 +119,11 @@ const Work = () => {
                       >
                         Live ↗
                       </a>
+                    )}
+                    {project.desktopBest && (
+                      <span className="work-badge work-badge--desktop">
+                        Best on desktop
+                      </span>
                     )}
                     {project.inProgress && (
                       <span className="work-badge work-badge--progress">
